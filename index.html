@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Mi Rutina</title>
+    <style>
+        :root {
+            --bg: #fdf2f8;
+            --card: #fff;
+            --tx: #3b1d3a;
+            --mut: #8b6b89;
+            --ac: #d946a8;
+            --ac2: #8b5cf6;
+            --ok: #10b981;
+            --ln: #f3d9ec;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+            color-scheme: light
+        }
+
+        @media(prefers-color-scheme:dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #1a1020;
+                --card: #2a1a33;
+                --tx: #fbe8f6;
+                --mut: #b99ab6;
+                --ln: #3d2749;
+                color-scheme: dark
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent
+        }
+
+        html,
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--tx);
+            font-family: system-ui, -apple-system, "Segoe UI", sans-serif
+        }
+
+        main {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px 16px 40px
+        }
+
+        h1 {
+            font-size: 26px;
+            margin: 4px 0 2px
+        }
+
+        .sub {
+            color: var(--mut);
+            margin: 0 0 18px;
+            font-size: 14px
+        }
+
+        .week {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 18px
+        }
+
+        .day {
+            flex: 1;
+            background: var(--card);
+            border: 2px solid transparent;
+            border-radius: 14px;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 12px;
+            color: var(--mut);
+            cursor: pointer
+        }
+
+        .day b {
+            display: block;
+            font-size: 16px;
+            color: var(--tx);
+            margin-top: 2px
+        }
+
+        .day.sel {
+            border-color: var(--ac)
+        }
+
+        .day.done {
+            background: var(--ok);
+            color: #fff
+        }
+
+        .day.done b {
+            color: #fff
+        }
+
+        .day.today b::after {
+            content: "•";
+            color: var(--ac);
+            display: block;
+            line-height: 6px
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--ac), var(--ac2));
+            color: #fff;
+            border-radius: 24px;
+            padding: 22px;
+            margin-bottom: 16px
+        }
+
+        .hero .em {
+            font-size: 40px
+        }
+
+        .hero h2 {
+            margin: 6px 0 2px;
+            font-size: 24px
+        }
+
+        .hero p {
+            margin: 0;
+            opacity: .9;
+            font-size: 14px
+        }
+
+        .bar {
+            height: 8px;
+            background: rgba(255, 255, 255, .3);
+            border-radius: 8px;
+            margin-top: 16px;
+            overflow: hidden
+        }
+
+        .bar i {
+            display: block;
+            height: 100%;
+            background: #fff;
+            border-radius: 8px;
+            transition: width .3s
+        }
+
+        .ex {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--card);
+            border-radius: 18px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 1px solid var(--ln)
+        }
+
+        .ck {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--ac);
+            flex: none;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 16px
+        }
+
+        .ex.on .ck {
+            background: var(--ok);
+            border-color: var(--ok)
+        }
+
+        .ex.on .nm {
+            text-decoration: line-through;
+            color: var(--mut)
+        }
+
+        .nm {
+            font-weight: 600
+        }
+
+        .dt {
+            font-size: 13px;
+            color: var(--mut)
+        }
+
+        .bd {
+            flex: 1;
+            cursor: pointer
+        }
+
+        .chv {
+            color: var(--mut);
+            font-size: 12px;
+            cursor: pointer
+        }
+
+        .tp {
+            margin: 10px 0 8px;
+            padding-left: 18px;
+            font-size: 14px;
+            line-height: 1.5
+        }
+
+        .yt {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--ac), var(--ac2));
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 12px
+        }
+
+        .rest {
+            text-align: center;
+            padding: 40px 10px;
+            color: var(--mut)
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px
+        }
+
+        .stats div {
+            flex: 1;
+            background: var(--card);
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+            border: 1px solid var(--ln)
+        }
+
+        .stats b {
+            display: block;
+            font-size: 22px;
+            color: var(--ac)
+        }
+
+        .stats span {
+            font-size: 12px;
+            color: var(--mut)
+        }
+
+        #ov {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 10, 30, .55);
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 9
+        }
+
+        .sheet {
+            background: var(--card);
+            width: 100%;
+            max-width: 480px;
+            border-radius: 24px 24px 0 0;
+            padding: 22px 18px calc(22px + env(safe-area-inset-bottom, 0px));
+            max-height: 92%;
+            overflow-y: auto
+        }
+
+        .sheet h2 {
+            margin: 0 0 4px
+        }
+
+        .sheet label {
+            display: block;
+            font-size: 13px;
+            color: var(--mut);
+            margin: 14px 0 6px
+        }
+
+        .sheet input {
+            display: block;
+            width: 100%;
+            margin-top: 6px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--ln);
+            background: var(--bg);
+            color: var(--tx);
+            font-size: 16px
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .chip {
+            border: 1px solid var(--ln);
+            background: var(--bg);
+            color: var(--tx);
+            border-radius: 20px;
+            padding: 9px 14px;
+            font-size: 14px
+        }
+
+        .chip.on {
+            background: var(--ac);
+            border-color: var(--ac);
+            color: #fff
+        }
+
+        .btn {
+            width: 100%;
+            margin-top: 18px;
+            border: 0;
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, var(--ac), var(--ac2))
+        }
+
+        .lnk {
+            background: none;
+            border: 0;
+            color: var(--ac);
+            font-size: inherit;
+            padding: 0;
+            text-decoration: underline
+        }
+
+        .er {
+            color: #e11d48;
+            font-size: 13px;
+            min-height: 16px;
+            margin: 8px 0 0
+        }
+
+        .note {
+            background: var(--card);
+            border-left: 4px solid var(--ac);
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            line-height: 1.4
+        }
+
+        .wn {
+            font-size: 11px;
+            color: var(--ac);
+            font-weight: 600
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Mi rutina 💪</h1>
+        <p class="sub" id="sub"></p>
+        <div class="week" id="week"></div>
+        <div id="view"></div>
+        <div class="stats">
+            <div><b id="s1">0</b><span>días esta semana</span></div>
+            <div><b id="s2">0</b><span>racha</span></div>
+        </div>
+    </main>
+    <script>
+        const P = {
+            1: { n: "Cardio", e: "🤸‍♀️", d: "Comba y abdominales", x: [["Calentamiento", "3 min de movilidad"], ["Saltar la comba", "5 × 2 min · 1 min descanso"], ["Abdominales", "3 × 15"], ["Plancha", "3 × 30 s"], ["Estiramientos", "5 min"]] },
+            2: { n: "Pilates", e: "🧘‍♀️", d: "Control, core y flexibilidad", x: [["The Hundred", "1 min"], ["Roll up", "10 repeticiones"], ["Puente de glúteos", "12 repeticiones"], ["Single leg stretch", "10 por lado"], ["Swimming", "3 × 30 s"], ["Estiramiento final", "5 min"]] },
+            3: { n: "Fuerza", e: "🏋️‍♀️", d: "Cuerpo completo", x: [["Sentadillas", "4 × 12"], ["Zancadas", "3 × 10 por pierna"], ["Puente de glúteos con peso", "3 × 12"], ["Flexiones en rodillas", "3 × 10"], ["Remo con mancuerna", "3 × 12"], ["Plancha", "3 × 40 s"]] },
+            4: null, 5: null
+        };
+        const A = P[1], B = P[2], C = P[3];
+        P[1] = P[3] = P[5] = null; P[2] = A; P[4] = C;
+        P[0] = { n: "Pilates y cardio", e: "🧘‍♀️", d: "Core, flexibilidad y comba suave", x: [["Saltar la comba", "3 × 2 min · 1 min descanso"], ...B.x] };
+        const T = {
+            "Calentamiento": "Rota hombros, caderas y tobillos|Haz 20 saltos suaves en el sitio|Balancea las piernas adelante y atrás",
+            "Saltar la comba": "Codos pegados al cuerpo; el giro sale de las muñecas|Saltos pequeños, solo unos centímetros del suelo|Aterriza sobre la punta del pie con rodillas flexibles|Si no tienes comba, imita el gesto",
+            "Abdominales": "Tumbada, rodillas dobladas y pies en el suelo|Manos tras la cabeza sin tirar del cuello|Sube el pecho contrayendo el abdomen|Baja despacio, sin soltarte de golpe",
+            "Plancha": "Apoya antebrazos y puntas de los pies|Cuerpo recto de la cabeza a los talones|Aprieta abdomen y glúteos|No hundas ni subas la cadera",
+            "Estiramientos": "Aguanta cada estiramiento 20-30 s|Respira hondo y sin rebotes|Trabaja piernas, espalda y hombros",
+            "The Hundred": "Tumbada, piernas en alto y cabeza levantada|Brazos estirados: bátelos arriba y abajo|Inhala 5 tiempos y exhala 5 tiempos|Mantén el abdomen firme",
+            "Roll up": "Tumbada con los brazos estirados sobre la cabeza|Sube vértebra a vértebra hasta sentarte|Alcanza los pies y vuelve rodando despacio",
+            "Puente de glúteos": "Tumbada, rodillas dobladas y pies a la anchura de caderas|Sube la cadera apretando los glúteos|Cuerpo recto de hombros a rodillas|Baja despacio",
+            "Single leg stretch": "Tumbada, con cabeza y hombros levantados|Una rodilla al pecho y la otra pierna estirada|Cambia de pierna con control y abdomen firme",
+            "Swimming": "Boca abajo, brazos y piernas estirados|Levanta brazos y piernas del suelo|Alterna brazo y pierna contraria con movimientos pequeños",
+            "Estiramiento final": "Postura del niño: sentada sobre los talones y brazos al frente|Respira hondo y relaja la espalda",
+            "Sentadillas": "Pies a la anchura de los hombros|Lleva la cadera hacia atrás como para sentarte|Rodillas en la dirección de los pies y espalda recta|Sube empujando con los talones",
+            "Zancadas": "Da un paso largo al frente|Baja hasta formar dos ángulos de 90° con las rodillas|La rodilla delantera sobre el tobillo|Empuja para volver y cambia de pierna",
+            "Puente de glúteos con peso": "Igual que el puente normal|Apoya una mochila o mancuerna sobre la cadera|Sube apretando glúteos y baja con control",
+            "Flexiones en rodillas": "Manos algo más anchas que los hombros y rodillas apoyadas|Cuerpo recto de la cabeza a las rodillas|Baja el pecho al suelo con codos a 45°|Empuja para subir",
+            "Remo con mancuerna": "Una mano y una rodilla apoyadas en una silla o banco|Espalda recta y mancuerna (o botella de agua) en la otra mano|Sube el codo hacia la cadera juntando el omóplato|Baja despacio"
+        };
+        let opn = null;
+        const op = id => { opn = opn === id ? null : id; render() };
+        const tp = n => '<ol class="tp">' + (T[n] || "").split("|").map(t => `<li>${t}</li>`).join("") + '</ol><a class="yt" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=' + encodeURIComponent(n + " ejercicio cómo se hace") + '">▶ Ver vídeo</a>';
+        const DN = ["D", "L", "M", "X", "J", "V", "S"], MN = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+        let st = {}; try { st = JSON.parse(localStorage.getItem("fit") || "{}") } catch (e) { }
+        const save = () => { try { localStorage.setItem("fit", JSON.stringify(st)) } catch (e) { } };
+        const k = d => d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+        const now = new Date(), mon = new Date(now); mon.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+        const days = [1, 2, 3, 4, 5, 6, 0].map((w, i) => { const d = new Date(mon); d.setDate(mon.getDate() + i); return { w, d } });
+        let sel = now.getDay();
+        const isDone = (w, d) => P[w] && (st[k(d)] || []).length >= P[w].x.length;
+        function render() {
+            const ad = adapt(); document.getElementById("sub").innerHTML = "Hoy es " + MN[now.getDay()] + ". <button class=\"lnk\" onclick=\"prof()\">Mi perfil</button>";
+            document.getElementById("week").innerHTML = days.map(({ w, d }) => `<div class="day${w == sel ? " sel" : ""}${isDone(w, d) ? " done" : ""}${w == now.getDay() ? " today" : ""}" onclick="sel=${w};render()">${DN[w]}<b>${d.getDate()}</b></div>`).join("");
+            const p = P[sel], o = days.find(x => x.w == sel).d, key = k(o), dn = st[key] || [];
+            if (!p) { document.getElementById("view").innerHTML = '<div class="rest">😴<br><br>Día de descanso.<br>Tu cuerpo también necesita recuperarse.</div>' }
+            else {
+                const pc = Math.round(dn.length / p.x.length * 100);
+                document.getElementById("view").innerHTML = (o > now ? '<div class="note">Este día aún no ha llegado; podrás marcarlo cuando toque.</div>' : "") + note(ad) + `<div class="hero"><div class="em">${p.e}</div><h2>${p.n}</h2><p>${p.d}</p><div class="bar"><i style="width:${pc}%"></i></div></div>` +
+                    p.x.map((e, i) => `<div class="ex${dn.includes(i) ? " on" : ""}"><div class="ck" onclick="tg('${key}',${i})">${dn.includes(i) ? "✓" : ""}</div><div class="bd" onclick="op('${sel}-${i}')"><div class="nm">${e[0]}</div><div class="dt">${sc(e[1], ad.a.includes(e[0]) ? Math.min(ad.f, 1) * .6 : ad.f)}${ad.a.includes(e[0]) ? ' <span class="wn">⚠ más suave</span>' : ""}</div>${opn == sel + "-" + i ? tp(e[0]) : ""}</div><div class="chv">${opn == sel + "-" + i ? "▲" : "▼"}</div></div>`).join("") +
+                    (pc == 100 ? '<div class="rest">🎉 ¡Entrenamiento completado!</div>' : "");
+            }
+            document.getElementById("s1").textContent = days.filter(({ w, d }) => isDone(w, d)).length;
+            let r = 0; for (let i = 0; i < 60; i++) { const d = new Date(now); d.setDate(now.getDate() - i); const w = d.getDay(); if (!P[w]) continue; if (isDone(w, d)) r++; else if (i > 0) break }
+            document.getElementById("s2").textContent = r;
+        }
+        const $ = i => document.getElementById(i);
+        const ov = document.createElement("div"); ov.id = "ov"; document.body.append(ov);
+        let tmp = {};
+        const cl = () => { ov.style.display = "none" };
+        const ch = (g, o, c) => '<div class="chips">' + o.map(x => `<button class="chip${x == c ? " on" : ""}" onclick="pk('${g}','${x}',this)">${x}</button>`).join("") + '</div>';
+        function pk(g, o, b) { tmp[g] = o;[...b.parentNode.children].forEach(c => c.classList.toggle("on", c == b)) }
+        function prof() { const p = st.p || {}; tmp = { g: p.g }; ov.innerHTML = `<div class="sheet"><h2>${p.g ? "Tu perfil" : "¡Bienvenida! 👋"}</h2><p class="sub">Tus datos se guardan solo en este móvil.</p><label>Género</label>${ch("g", ["Mujer", "Hombre", "Otro"], p.g)}<p class="er" id="er"></p><button class="btn" onclick="sp()">Guardar</button></div>`; ov.style.display = "flex" }
+        function sp() { if (!tmp.g) { $("er").textContent = "Elige una opción."; return } st.p = { g: tmp.g }; save(); cl(); render() }
+        function fbo(key) { tmp = {}; ov.innerHTML = `<div class="sheet"><h2>¡Sesión completada! 🎉</h2><p class="sub">Cuéntame cómo ha ido para ajustar tus próximos entrenamientos.</p><label>¿Qué tal la intensidad?</label>${ch("d", ["Muy fácil", "Perfecta", "Dura", "Demasiado dura"])}<label>¿Cómo te sientes?</label>${ch("e", ["Con energía", "Normal", "Cansada"])}<label>¿Alguna molestia?</label>${ch("m", ["Ninguna", "Rodillas", "Espalda", "Hombros", "Otra"])}<p class="er" id="er"></p><button class="btn" onclick="sf('${key}')">Guardar</button><p style="text-align:center;margin:12px 0 0"><button class="lnk" onclick="cl()">Ahora no</button></p></div>`; ov.style.display = "flex" }
+        function sf(key) { if (!(tmp.d && tmp.e && tmp.m)) { $("er").textContent = "Responde a las tres preguntas."; return } st.fb = st.fb || {}; st.fb[key] = { ...tmp }; save(); cl(); render() }
+        const AREA = { "Rodillas": ["Sentadillas", "Zancadas", "Saltar la comba", "Flexiones en rodillas"], "Espalda": ["Roll up", "Remo con mancuerna", "Swimming", "Abdominales"], "Hombros": ["Flexiones en rodillas", "Plancha", "Remo con mancuerna", "Swimming"] };
+        function adapt() { const f = Object.values(st.fb || {}).slice(-2), l = f[f.length - 1]; if (!l) return { f: 1, a: [] }; let m = 1; if (l.d == "Demasiado dura") m = .6; else if (l.d == "Dura" && l.e == "Cansada") m = .75; else if (f.length > 1 && f.every(x => x.d == "Muy fácil" && x.e != "Cansada")) m = 1.25; return { f: m, a: AREA[l.m] || [] } }
+        const sc = (s, m) => s.replace(/\d+/, n => Math.max(1, Math.round(n * m)));
+        function note(a) { let s = ""; if (a.f < 1) s += "Hoy bajamos un poco la carga según tu última sesión. "; if (a.f > 1) s += "¡Subimos un poco el reto! "; if (a.a.length) s += "Notaste molestias: los ejercicios con ⚠ van más suaves. Si el dolor continúa, consulta con un profesional."; return s ? '<div class="note">' + s + '</div>' : "" }
+        function tg(key, i) { if (days.find(x => x.w == sel).d > now) return; const a = st[key] || []; st[key] = a.includes(i) ? a.filter(x => x != i) : [...a, i]; save(); render(); const p = P[sel]; if (p && st[key].length >= p.x.length && !(st.fb && st.fb[key])) fbo(key) }
+        render(); if (!st.p) prof();
+    </script>
+</body>
+
+</html>
