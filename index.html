@@ -5,6 +5,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Mi Rutina</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d946a8">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Mi Rutina">
+
     <style>
         :root {
             --bg: #fdf2f8;
@@ -398,7 +407,7 @@
             "Puente de glúteos con peso": "Igual que el puente normal|Apoya una mochila o mancuerna sobre la cadera|Sube apretando glúteos y baja con control",
             "Flexiones en rodillas": "Manos algo más anchas que los hombros y rodillas apoyadas|Cuerpo recto de la cabeza a las rodillas|Baja el pecho al suelo con codos a 45°|Empuja para subir",
             "Curl de bíceps": "De pie, con la espalda recta y los codos pegados al cuerpo, flexiona los brazos llevando las mancuernas hacia los hombros y bájalas lentamente de forma controlada.",
-    
+
         };
         let opn = null;
         const op = id => { opn = opn === id ? null : id; render() };
@@ -442,6 +451,11 @@
         function note(a) { let s = ""; if (a.f < 1) s += "Hoy bajamos un poco la carga según tu última sesión. "; if (a.f > 1) s += "¡Subimos un poco el reto! "; if (a.a.length) s += "Notaste molestias: los ejercicios con ⚠ van más suaves. Si el dolor continúa, consulta con un profesional."; return s ? '<div class="note">' + s + '</div>' : "" }
         function tg(key, i) { if (days.find(x => x.w == sel).d > now) return; const a = st[key] || []; st[key] = a.includes(i) ? a.filter(x => x != i) : [...a, i]; save(); render(); const p = P[sel]; if (p && st[key].length >= p.x.length && !(st.fb && st.fb[key])) fbo(key) }
         render(); if (!st.p) prof();
+
+        // Service worker (necesario para poder instalar la app)
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("sw.js").catch(() => { });
+        }
     </script>
 </body>
 
